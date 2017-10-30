@@ -15,6 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR = os.path.dirname(BASE_DIR)
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
 CONFIG_SECRET_DIR = os.path.join(ROOT_DIR, '.config_secret')
 
@@ -25,6 +26,16 @@ f.close()
 config_secret_common = json.loads(config_secret_common_str)
 
 SECRET_KEY = config_secret_common["django"]["secret_key"]
+
+AWS_ACCESS_KEY_ID = config_secret_common["aws"]["acces_key_id"]
+AWS_SECRET_ACCESS_KEY = config_secret_common["aws"]["secret_access_key"]
+AWS_STORAGE_BUCKET_NAME = config_secret_common["aws"]["s3_bucket_name"]
+
+STATICFILES_LOCATION = 'static'
+MEDIAFILES_LOCATION = 'media'
+
+DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
+STATICFILES_STORAGE = 'config.storages.StaticStorage'
 
 AUTH_USER_MODEL = 'member.User'
 
@@ -55,6 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'member',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +84,9 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            TEMPLATE_DIR,
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
